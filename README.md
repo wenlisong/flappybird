@@ -20,7 +20,7 @@ it can run in the "dummy"(headless) mode(say, running without video devices).
 ```
 git clone https://github.com/wenlisong/flappybird.git
 cd flappybird
-python run_dqn.py
+python main.py -g fb -n dqn
 ```
 
 
