@@ -114,7 +114,8 @@ class DeepQNetwork(ReinforcementLearning):
                                              self.a: a_t_batch,
                                              self.y: y_batch,
                                          })
-        self.writer.add_summary(summary_loss, self.learn_step_counter)
+        if self.learn_step_counter % 50 == 0:
+            self.writer.add_summary(summary_loss, self.learn_step_counter)
 
         self.learn_step_counter += 1
  
