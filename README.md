@@ -10,6 +10,22 @@ BUT what I want to do is a little different (or say, I play it in a different wa
 I make the pipe move **UP and DOWN** each frame. If I can play the game under this situation, 
 I estimate that it play the origin game very well.
 
+## Introduction
+### Game
+"Flappy Bird" is a side-scrolling game in which the gameplay action is viewed from a side-view camera angle, 
+and the onscreen characters can generally only move to the left or right. It is just like "Super Mario Bros". 
+In the game, there is a flying bird, named "Faby", who moves continuously towards the right. 
+The objective is to direct Faby between sets of Mario-like pipes. If Faby hits the pipe, then player lose. 
+Faby briefly flaps upward each time that the player click left mouse button; if the buttuon is not clicked, 
+Faby falls because of gravity. Each pair of pipes that he navigates between earns the player one point.
+Therefore, player should fly Faby as far as possible to get high score.
+<div align="center">
+    <img src="./assets/readme/flappybird.png">
+</div>
+
+### Reinforcement Learning
+
+
 ## Reproduction
 First, I'll reproduce what [yenchenlin/DeepLearningFlappyBird](https://github.com/yenchenlin/DeepLearningFlappyBird)
 did in a clearer and more flexible structure. Of course, the main idea and methods are not changed. In this procedure,
