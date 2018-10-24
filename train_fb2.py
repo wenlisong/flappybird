@@ -16,12 +16,7 @@ def resize_gray_binary(image):
 def train(network):
     from game import wrapped_flappy_bird as fb
     import numpy as np
-    if network == 'mydqn':
-        from mydqn import DeepQNetwork
-        score_graph_path = './saved_mydqn_model/'
-        rl = DeepQNetwork(learning_rate=1e-5,
-                          save_path=score_graph_path, )
-    elif network == 'mydqn2':
+    if network == 'mydqn2':
         from mydqn2 import DeepQNetwork
         score_graph_path = './saved_mydqn2_model/'
         rl = DeepQNetwork(learning_rate=1e-5,

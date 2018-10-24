@@ -24,7 +24,12 @@ def train(network):
     elif network == 'doubledqn':
         from double_dqn import DoubleDQN
         score_graph_path = './saved_double_dqn_model/'
-        rl = DoubleDQN(save_path=score_graph_path, )
+        rl = DoubleDQN(save_path=score_graph_path,)
+    elif network == 'mydqn':
+        from mydqn import DeepQNetwork
+        score_graph_path = './saved_mydqn_model/'
+        rl = DeepQNetwork(learning_rate=1e-5,
+                          save_path=score_graph_path, )
 
     game_state = fb.GameState()
 
