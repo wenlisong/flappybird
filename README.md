@@ -22,6 +22,7 @@ Therefore, player should fly Faby as far as possible to get high score.
 <div align="center">
     <img src="./assets/readme/flappybird.png">
 </div>
+
 ### Reinforcement Learning
 
 
