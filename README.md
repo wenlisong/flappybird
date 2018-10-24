@@ -19,7 +19,9 @@ The objective is to direct Faby between sets of Mario-like pipes. If Faby hits t
 Faby briefly flaps upward each time that the player click left mouse button; if the buttuon is not clicked, 
 Faby falls because of gravity. Each pair of pipes that he navigates between earns the player one point.
 Therefore, player should fly Faby as far as possible to get high score.
-<img src="./assets/readme/flappybird.png">
+<div align="center">
+    <img src="./assets/readme/flappybird.png">
+</div>
 ### Reinforcement Learning
 
 
