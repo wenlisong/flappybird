@@ -54,9 +54,16 @@ It means that the future is independent of the past given the present.
 A Markov process is a memoryless random process(a sequence of random states S1, S2, ... with the Markov property). 
 
 A Markov Process (or Markov Chain) is a tuple <***S,P***>, ***S*** is a (finite) set of states, 
-***P*** is a state transition probability matrix, ***P*** ss' = P[***St+1=s'*** | ***St=s***]
+***P*** is a state transition probability matrix, ***Pss'*** = P[***St+1=s'*** | ***St=s***]
 
+##### Markov Reward Process
+Markov Reward Process is a tuple <***S, P, R, γ***>, ***S*** is a finite set of states,
+***P*** is a state transition probability matrix, ***Pss'*** = P[***St+1=s'*** | ***St=s***],
+***R*** is a reward function, ***Rs*** = E[***Rt+1*** | ***St = s***], ***γ*** is a discount factor, γ ∈ [0, 1].
 
+##### Return
+The return Gt is the total discounted reward from time-step t.
+Gt =Rt+1+γRt+2+...=􏰋Sigma(k=0->∞)[γkRt+k+1]
 
 ## Reproduction
 First, I'll reproduce what [yenchenlin/DeepLearningFlappyBird](https://github.com/yenchenlin/DeepLearningFlappyBird)
