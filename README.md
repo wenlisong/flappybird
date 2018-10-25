@@ -19,20 +19,53 @@ The objective is to direct Faby between sets of Mario-like pipes. If Faby hits t
 Faby briefly flaps upward each time that the player click left mouse button; if the buttuon is not clicked, 
 Faby falls because of gravity. Each pair of pipes that he navigates between earns the player one point.
 Therefore, player should fly Faby as far as possible to get high score.
-<div align="center">
-    <img src="./assets/readme/flappybird.png">
-</div>
+
+<div align="center"><img src="./assets/readme/flappybird.png"></div>
 
 ### Reinforcement Learning
+
+#### Charactoristics of  Reinforcement Learning
+- There is no supervisor, only a reward signal. 
+- Feedback is delayed, not instantaneous. 
+- Time really matters. 
+- Agent’s actions affect the subsequent data it receives.
+#### Reward
+A reward Rt is a scalar feedback signal, which indicates how well agent is doing at step t.
+The agent’s job is to maximise cumulative reward.
+Reinforcement learning is based on the reward hypothesis.
+#### Agent and Environment
+Agent is just like a human, it makes decision from the current environment and result.
+Then the action influences on environment, and the agent gets new environment and result. 
+It learns these situations and gradually finds a good way to make decision and gets better result.
+
+<div align="center"><img src="./assets/readme/agent_environment.png"><div></div></div>
+
+Interaction of **Agent** and **Environment**. At each step ***t***: 
+The agent: executes action ***At***, receives observation ***Ot***, receives scalar reward ***Rt***.
+The environment: receives action ***At***, emits observation ***Ot+1***, emits scalar reward ***Rt+1***.
+***t*** increments at environment step.
+
+#### Markov Decision Processes
+##### Markov Property
+A state **St** is Markov if and only if **P[St+1 | St] = P[St+1 | S1,...,St]**
+
+It means that the future is independent of the past given the present.
+##### Markov Process
+A Markov process is a memoryless random process(a sequence of random states S1, S2, ... with the Markov property). 
+
+A Markov Process (or Markov Chain) is a tuple <***S,P***>, ***S*** is a (finite) set of states, 
+***P*** is a state transition probability matrix, ***P*** ss' = P[***St+1=s'*** | ***St=s***]
+
 
 
 ## Reproduction
 First, I'll reproduce what [yenchenlin/DeepLearningFlappyBird](https://github.com/yenchenlin/DeepLearningFlappyBird)
-did in a clearer and more flexible structure. Of course, the main idea and methods are not changed. In this procedure,
-I fix some bugs, record the score per episode using TensorBoard, visualize how images(game screen) processed and make
+did in a clearer and more flexible structure(learn from [Morvan](https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/)). 
+Of course, the main idea and methods are not changed. In this procedure, I fix some bugs, 
+record the score per episode using TensorBoard, visualize how images(game screen) processed and make
 it can run in the "dummy"(headless) mode(say, running without video devices).
 
-### How to Run?
+## How to Run?
 ```
 git clone https://github.com/wenlisong/flappybird.git
 cd flappybird
