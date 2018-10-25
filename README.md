@@ -72,6 +72,19 @@ Of course, the main idea and methods are not changed. In this procedure, I fix s
 record the score per episode using TensorBoard, visualize how images(game screen) processed and make
 it can run in the "dummy"(headless) mode(say, running without video devices).
 
+## Result
+#### Nature dqn
+<div align="center">loss<img src="./assets/readme/dqn_loss.png"><div></div></div>
+<div align="center">score<img src="./assets/readme/dqn_score.png"><div></div></div>
+
+#### Mydqn
+<div align="center">loss<img src="./assets/readme/mydqn_loss.png"><div></div></div>
+<div align="center">score<img src="./assets/readme/mydqn_score.png"><div></div></div>
+
+#### Mydqn2
+<div align="center">loss<img src="./assets/readme/mydqn2_loss.png"><div></div></div>
+<div align="center">score<img src="./assets/readme/mydqn2_score.png"><div></div></div>
+
 ## How to Run?
 ```
 git clone https://github.com/wenlisong/flappybird.git
