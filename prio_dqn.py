@@ -57,7 +57,7 @@ class Prio_Memory(Memory):
     beta_increment_per_sampling = 0.001
     abs_err_upper = 1.  # clipped abs error
 
-    def __init__(self, pool=None, memory_size=100):
+    def __init__(self, pool=None, memory_size=200000):
         self.pool = Sum_Tree(memory_size)
         super(Prio_Memory, self).__init__(self.pool, memory_size)
 
@@ -94,7 +94,7 @@ class Prio_Memory(Memory):
 
 class Prio_DQN_Agent(Agent):
     def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=200,
-                 batch_size=32, observe_step=100., explore_step=3000000., memory=Prio_Memory(), use_pre_weights=False,
+                 batch_size=32, observe_step=10000., explore_step=3000000., memory=Prio_Memory(), use_pre_weights=False,
                  save_path='./saved_prio_dqn_model/'):
 
         super(Prio_DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
