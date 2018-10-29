@@ -50,7 +50,7 @@ def train(network):
     
     
 
-def play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT):
+def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
     from game import wrapped_flappy_bird as fb
     import numpy as np
     env = fb.GameState()
@@ -114,7 +114,7 @@ def play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT):
         print("STEP", step, "/ STATE", state, "/ EPSILON", rl.epsilon, "/ ACTION", np.argmax(a_t), "/ REWARD", r_t)
 
 
-def play2(rl, IMAGE_WIDTH, IMAGE_HEIGHT):
+def play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
     from game import wrapped_flappy_bird as fb
     import numpy as np
 
