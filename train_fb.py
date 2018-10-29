@@ -20,37 +20,37 @@ def train(network):
         score_graph_path = './saved_dqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
                         save_path=score_graph_path,)
-        play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
     elif network == 'doubledqn':
         IMAGE_WIDTH = 80
         IMAGE_HEIGHT = 80
         from double_dqn import  DoubleDQN_Agent
         score_graph_path = './saved_double_dqn_model/'
         rl = DoubleDQN_Agent(save_path=score_graph_path,)
-        play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
     elif network == 'mydqn':
         from mydqn import DQN_Agent
         score_graph_path = './saved_mydqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
                         save_path=score_graph_path,)
-        play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
     elif network == 'mydqn2':
         from mydqn2 import DQN_Agent
         score_graph_path = './saved_mydqn2_model/'
         rl = DQN_Agent(learning_rate=1e-5,
                         save_path=score_graph_path,
                         use_pre_weights=True)
-        play2(rl, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
     elif network == 'priodqn':
         from prio_dqn import Prio_DQN_Agent
         score_graph_path = './saved_prio_dqn_model/'
         rl = Prio_DQN_Agent(learning_rate=1e-5,
                             save_path=score_graph_path,)
-        play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
     
     
 
-def play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT):
+def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
     from game import wrapped_flappy_bird as fb
     import numpy as np
     env = fb.GameState()
@@ -114,7 +114,7 @@ def play1(rl, IMAGE_WIDTH, IMAGE_HEIGHT):
         print("STEP", step, "/ STATE", state, "/ EPSILON", rl.epsilon, "/ ACTION", np.argmax(a_t), "/ REWARD", r_t)
 
 
-def play2(rl, IMAGE_WIDTH, IMAGE_HEIGHT):
+def play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
     from game import wrapped_flappy_bird as fb
     import numpy as np
 
