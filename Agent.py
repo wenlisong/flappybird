@@ -11,7 +11,7 @@ class Memory:
         pass
 
 
-class ReinforcementLearning:
+class Agent:
     def __init__(self, action_cnt=4, learning_rate=0.1, reward_decay=0.9, e_greedy=0.9, replace_target_iter=300,
                  batch_size=32, observe_step=200., explore_step=1000., memory=None):
         self.action_cnt = action_cnt
@@ -54,7 +54,7 @@ class ReinforcementLearning:
         if np.random.uniform() > self.epsilon:
             action_val = self.sess.run(self.q_eval, feed_dict={self.s: observation})
             action_idx = np.argmax(action_val, axis=1)
-            print('Q_Max_val {0}'.format(action_val))
+            # print('Q_Max_val {0}'.format(action_val))
         else:
             action_idx = np.random.randint(0, self.action_cnt)
         action[action_idx] = 1.

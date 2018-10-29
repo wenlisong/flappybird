@@ -63,7 +63,7 @@ Markov Reward Process is a tuple <***S, P, R, γ***>, ***S*** is a finite set of
 
 ##### Return
 The return Gt is the total discounted reward from time-step t.
-Gt =Rt+1+γRt+2+...=􏰋Sigma(k=0->∞)[γkRt+k+1]
+Gt = Rt+1+γRt+2+... = 􏰋Sigma(k=0->∞)[γkRt+k+1]
 
 ## Reproduction
 First, I'll reproduce what [yenchenlin/DeepLearningFlappyBird](https://github.com/yenchenlin/DeepLearningFlappyBird)

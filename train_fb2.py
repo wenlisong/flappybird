@@ -17,10 +17,11 @@ def train(network):
     from game import wrapped_flappy_bird as fb
     import numpy as np
     if network == 'mydqn2':
-        from mydqn2 import DeepQNetwork
+        from mydqn2 import DQN_Agent
         score_graph_path = './saved_mydqn2_model/'
-        rl = DeepQNetwork(learning_rate=1e-5,
-                          save_path=score_graph_path, )
+        rl = DQN_Agent(learning_rate=1e-5,
+                        save_path=score_graph_path,
+                        use_pre_weights=True )
 
     game_state = fb.GameState()
 
@@ -49,7 +50,7 @@ def train(network):
         if not terminal:
             rl.score_per_episode += r_t
         else:
-            # print(episode, rl.score_per_episode)
+            print(episode, rl.score_per_episode)
             if episode % 10 == 0:
                 summary, summary_score = rl.sess.run([rl.summary_score, rl.score], feed_dict={rl.score: rl.score_per_episode})
                 rl.writer.add_summary(summary, episode)

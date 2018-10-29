@@ -1,4 +1,4 @@
-from reinforcement_learning import ReinforcementLearning, Memory
+from Agent import Agent, Memory
 import tensorflow as tf
 import numpy as np
 import random
@@ -16,13 +16,13 @@ class Deque(Memory):
             self.pool.popleft()
 
 
-class DeepQNetwork(ReinforcementLearning):
-    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=200,
-                 batch_size=32, observe_step=10000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
+class DQN_Agent(Agent):
+    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0., replace_target_iter=200,
+                 batch_size=32, observe_step=1000000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
                  save_path='./saved_dqn_model/'):
 
-        super(DeepQNetwork, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
-                                           batch_size, observe_step, explore_step, memory)
+        super(DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
+                                        batch_size, observe_step, explore_step, memory)
         # record average score per episode
         self.score_per_episode = 0
         self.score = tf.placeholder(tf.float16, [], name='score')

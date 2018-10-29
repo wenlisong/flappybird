@@ -1,11 +1,11 @@
-from dqn import DeepQNetwork
+from dqn import DQN_Agent
 import numpy as np
 import random
 
 
-class DoubleDQN(DeepQNetwork):
+class DoubleDQN_Agent(DQN_Agent):
     def __init__(self, use_pre_weights=False, save_path='./saved_double_dqn_model/'):
-        super(DoubleDQN, self).__init__(use_pre_weights=use_pre_weights, save_path=save_path)
+        super(DoubleDQN_Agent, self).__init__(use_pre_weights=use_pre_weights, save_path=save_path)
 
     def learn(self):
         if self.learn_step_counter % self.replace_target_iter == 0:
