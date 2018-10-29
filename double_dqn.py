@@ -20,7 +20,7 @@ class DoubleDQN_Agent(DQN_Agent):
         y_batch = []
 
         q_next, q_eval4next = self.sess.run([self.q_next, self.q_eval],
-                                            feed_dict={self.s_: s_t1_batch, self.s: s_t1_batch})
+                                            feed_dict={self.s_: s_t1_batch, self.s: s_t_batch})
 
         for i in range(len(minibatch)):
             terminal = minibatch[i][4]
