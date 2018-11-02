@@ -33,4 +33,10 @@ class DoubleDQN_Agent(DQN_Agent):
         _, loss = self.sess.run([self._train_op, self.loss],
                                 feed_dict={self.s: s_t_batch, self.a: a_t_batch, self.y: y_batch})
 
+        self.loss_per_step += loss
+        if self.learn_step_counter % 100 == 0:
+            self.loss_per_step = round(self.loss_per_step/100, 3)
+            self.writer.add_summary(summary_loss, self.learn_step_counter)
+            self.loss_per_step = 0
+        
         self.learn_step_counter += 1

@@ -7,7 +7,7 @@ import pdb
 
 
 class Deque(Memory):
-    def __init__(self, pool=deque(), memory_size=50000):
+    def __init__(self, pool=deque(), memory_size=500000):
         super(Deque, self).__init__(pool, memory_size)
 
     def store_transition(self, s, a, r, s_, terminal):
@@ -17,8 +17,8 @@ class Deque(Memory):
 
 
 class DQN_Agent(Agent):
-    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0., replace_target_iter=200,
-                 batch_size=32, observe_step=1000000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
+    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0., replace_target_iter=1000,
+                 batch_size=32, observe_step=100000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
                  save_path='./saved_dqn_model/'):
 
         super(DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
@@ -100,7 +100,9 @@ class DQN_Agent(Agent):
         s_t1_batch = [row[3] for row in minibatch]
 
         y_batch = []
+
         q_next = self.sess.run(self.q_next, feed_dict={self.s_: s_t1_batch})
+
         for i in range(len(minibatch)):
             terminal = minibatch[i][4]
             if terminal:
@@ -114,8 +116,12 @@ class DQN_Agent(Agent):
                                              self.a: a_t_batch,
                                              self.y: y_batch,
                                          })
-        if self.learn_step_counter % 50 == 0:
+        
+        self.loss_per_step += loss
+        if self.learn_step_counter % 100 == 0:
+            self.loss_per_step = round(self.loss_per_step/100, 3)
             self.writer.add_summary(summary_loss, self.learn_step_counter)
+            self.loss_per_step = 0
 
         self.learn_step_counter += 1
  

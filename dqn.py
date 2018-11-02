@@ -16,7 +16,7 @@ class Deque(Memory):
 
 
 class DQN_Agent(Agent):
-    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=300,
+    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=1000,
                  batch_size=32, observe_step=10000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
                  save_path='./saved_dqn_model/'):
 
@@ -26,6 +26,7 @@ class DQN_Agent(Agent):
         self.score_per_episode = 0
         self.score = tf.placeholder(tf.float16, [], name='score')
         self.summary_score = tf.summary.scalar('score_per_episode', self.score)
+        self.loss_per_step = 0
 
         self.writer = tf.summary.FileWriter(save_path, self.sess.graph)
         self.merge_score = tf.summary.merge([self.summary_score])
@@ -95,7 +96,9 @@ class DQN_Agent(Agent):
         s_t1_batch = [row[3] for row in minibatch]
 
         y_batch = []
+        
         q_next = self.sess.run(self.q_next, feed_dict={self.s_: s_t1_batch})
+        
         for i in range(len(minibatch)):
             terminal = minibatch[i][4]
             if terminal:
@@ -104,12 +107,16 @@ class DQN_Agent(Agent):
                 y_batch.append(r_t_batch[i] + self.gamma * np.max(q_next[i]))
 
         _, loss, summary_loss = self.sess.run([self._train_op, self.loss, self.merge_loss],
-                                         feed_dict={
-                                             self.s: s_t_batch,
-                                             self.a: a_t_batch,
-                                             self.y: y_batch,
-                                         })
-        if self.learn_step_counter % 50 == 0:
+                                            feed_dict={
+                                                self.s: s_t_batch,
+                                                self.a: a_t_batch,
+                                                self.y: y_batch,
+                                            })
+        
+        self.loss_per_step += loss
+        if self.learn_step_counter % 100 == 0:
+            self.loss_per_step = round(self.loss_per_step/100, 3)
             self.writer.add_summary(summary_loss, self.learn_step_counter)
+            self.loss_per_step = 0
 
         self.learn_step_counter += 1

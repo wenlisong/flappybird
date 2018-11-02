@@ -13,6 +13,7 @@ def resize_gray_binary(image, IMAGE_WIDTH, IMAGE_HEIGHT):
 def train(network):
     IMAGE_WIDTH = 84
     IMAGE_HEIGHT = 84
+    finish_step = 10000000
     if network == 'dqn':
         IMAGE_WIDTH = 80
         IMAGE_HEIGHT = 80
@@ -20,37 +21,36 @@ def train(network):
         score_graph_path = './saved_dqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
                         save_path=score_graph_path,)
-        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'doubledqn':
         IMAGE_WIDTH = 80
         IMAGE_HEIGHT = 80
         from double_dqn import  DoubleDQN_Agent
         score_graph_path = './saved_double_dqn_model/'
         rl = DoubleDQN_Agent(save_path=score_graph_path,)
-        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'mydqn':
         from mydqn import DQN_Agent
         score_graph_path = './saved_mydqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
                         save_path=score_graph_path,)
-        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'mydqn2':
         from mydqn2 import DQN_Agent
         score_graph_path = './saved_mydqn2_model/'
         rl = DQN_Agent(learning_rate=1e-5,
-                        save_path=score_graph_path,
-                        use_pre_weights=True)
-        play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+                        save_path=score_graph_path,)
+        play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'priodqn':
         from prio_dqn import Prio_DQN_Agent
         score_graph_path = './saved_prio_dqn_model/'
         rl = Prio_DQN_Agent(learning_rate=1e-5,
                             save_path=score_graph_path,)
-        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     
     
 
-def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
+def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
     from game import wrapped_flappy_bird as fb
     import numpy as np
     env = fb.GameState()
@@ -60,7 +60,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
     do_nothing[0] = 1
 
     img, r_0, terminal = env.frame_step(do_nothing)
-    rl.score_per_episode += r_0
+
     # image preprocessing
     img = resize_gray_binary(img, IMAGE_WIDTH, IMAGE_HEIGHT)
     s_t = np.stack((img, img, img, img), axis=2)
@@ -73,16 +73,16 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
 
         # rl take action and get next image and reward
         img, r_t, terminal = env.frame_step(a_t)
-
-        if not terminal:
-            rl.score_per_episode += r_t
-        else:
-            # print(episode, rl.score_per_episode)
+        
+        if r_t == 1:
+            rl.score_per_episode += 1
+        if terminal:
+            episode += 1
             if episode % 10 == 0:
+                rl.score_per_episode = round(rl.score_per_episode/10, 3)
                 summary, summary_score = rl.sess.run([rl.summary_score, rl.score], feed_dict={rl.score: rl.score_per_episode})
                 rl.writer.add_summary(summary, episode)
-            rl.score_per_episode = 0
-            episode += 1
+                rl.score_per_episode =0
 
         img = resize_gray_binary(img, IMAGE_WIDTH, IMAGE_HEIGHT)
         img = np.reshape(img, (IMAGE_WIDTH, IMAGE_HEIGHT, 1))
@@ -110,11 +110,13 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
             state = "explore"
         else:
             state = "train"
-
         print("STEP", step, "/ STATE", state, "/ EPSILON", rl.epsilon, "/ ACTION", np.argmax(a_t), "/ REWARD", r_t)
 
+        if step > finish_step:
+            break
 
-def play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
+
+def play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
     from game import wrapped_flappy_bird as fb
     import numpy as np
 
@@ -125,7 +127,7 @@ def play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
     do_nothing[0] = 1
 
     img, r_0, terminal = game_state.frame_step(do_nothing)
-    rl.score_per_episode += r_0
+
     # image preprocessing
     img = resize_gray_binary(img, IMAGE_WIDTH, IMAGE_HEIGHT)
     s_t = np.stack((img, img, img, img), axis=2)
@@ -142,15 +144,15 @@ def play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
         # rl take action and get next image and reward
         img, r_t, terminal = game_state.frame_step(a_t)
 
-        if not terminal:
-            rl.score_per_episode += r_t
-        else:
-            print(episode, rl.score_per_episode)
+        if r_t == 1:
+            rl.score_per_episode += 1
+        if terminal:
+            episode += 1
             if episode % 10 == 0:
+                rl.score_per_episode = round(rl.score_per_episode/10, 3)
                 summary, summary_score = rl.sess.run([rl.summary_score, rl.score], feed_dict={rl.score: rl.score_per_episode})
                 rl.writer.add_summary(summary, episode)
-            rl.score_per_episode = 0
-            episode += 1
+                rl.score_per_episode =0
 
         img = resize_gray_binary(img, IMAGE_WIDTH, IMAGE_HEIGHT)
         img = np.reshape(img, (84, 84, 1))
@@ -180,6 +182,9 @@ def play2(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT):
             state = "train"
 
         print("STEP", step, "/ STATE", state, "/ EPSILON", rl.epsilon, "/ ACTION", np.argmax(a_t), "/ REWARD", r_t)
+
+        if step > finish_step:
+            break
 
 
 def main():

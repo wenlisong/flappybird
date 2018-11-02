@@ -38,7 +38,9 @@ class Agent:
         # config gpu
         config = tf.ConfigProto()
         config.log_device_placement = True
-        config.allow_soft_placement=True
+        config.allow_soft_placement = True
+        config.gpu_options.allow_growth = True
+        config.gpu_options.per_process_gpu_memory_fraction = 0.5
         # config.gpu_options.visible_device_list = '0'
         self.sess = tf.Session(config=config)
         self.saver = tf.train.Saver(max_to_keep=2)

@@ -57,7 +57,7 @@ class Prio_Memory(Memory):
     beta_increment_per_sampling = 0.001
     abs_err_upper = 1.  # clipped abs error
 
-    def __init__(self, pool=None, memory_size=200000):
+    def __init__(self, pool=None, memory_size=500000):
         self.pool = Sum_Tree(memory_size)
         super(Prio_Memory, self).__init__(self.pool, memory_size)
 
@@ -93,8 +93,8 @@ class Prio_Memory(Memory):
 
 
 class Prio_DQN_Agent(Agent):
-    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=200,
-                 batch_size=32, observe_step=10000., explore_step=3000000., memory=Prio_Memory(), use_pre_weights=False,
+    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=1000,
+                 batch_size=32, observe_step=100000., explore_step=3000000., memory=Prio_Memory(), use_pre_weights=True,
                  save_path='./saved_prio_dqn_model/'):
 
         super(Prio_DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
@@ -103,6 +103,7 @@ class Prio_DQN_Agent(Agent):
         self.score_per_episode = 0
         self.score = tf.placeholder(tf.float16, [], name='score')
         self.summary_score = tf.summary.scalar('score_per_episode', self.score)
+        self.loss_per_step = 0
 
         self.writer = tf.summary.FileWriter(save_path, self.sess.graph)
         self.merge_score = tf.summary.merge([self.summary_score])
@@ -190,9 +191,14 @@ class Prio_DQN_Agent(Agent):
                                                                 self.y: y_batch,
                                                                 self.ISWeights: ISWeights
                                                             })
+        
         self.memory.batch_update(tree_idx, abs_errors)
-        if self.learn_step_counter % 50 == 0:
+        
+        self.loss_per_step += loss
+        if self.learn_step_counter % 100 == 0:
+            self.loss_per_step = round(self.loss_per_step/100, 3)
             self.writer.add_summary(summary_loss, self.learn_step_counter)
-
+            self.loss_per_step = 0
+        
         self.learn_step_counter += 1
  

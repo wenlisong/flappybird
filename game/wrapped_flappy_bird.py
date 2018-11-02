@@ -2,6 +2,7 @@ import random
 import pygame
 from game import flappy_bird_utils
 from itertools import cycle
+import math
 import os
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
@@ -15,7 +16,7 @@ FPSCLOCK = pygame.time.Clock()
 SCREEN = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT), 0, 32)
 pygame.display.set_caption('Flappy Bird')
 IMAGES, SOUNDS, HITMASKS = flappy_bird_utils.load()
-PIPEGAPSIZE = 110  # gap between upper and lower part of pipe
+PIPEGAPSIZE = 115  # gap between upper and lower part of pipe
 BASEY = SCREENHEIGHT * 0.79
 
 PLAYER_WIDTH = IMAGES['player'][0].get_width()
@@ -34,6 +35,7 @@ class GameState:
         self.playery = int((SCREENHEIGHT - PLAYER_HEIGHT) / 2)
         self.basex = 0
         self.baseShift = IMAGES['base'].get_width() - BACKGROUND_WIDTH
+        self._t = 1
 
         newPipe1 = getRandomPipe()
         newPipe2 = getRandomPipe()
@@ -97,13 +99,18 @@ class GameState:
             self.playery = 0
 
         # move pipes to left
+        pipeUD = 15*(math.sin(self._t/FPS*math.pi)-math.sin((self._t-1)/FPS*math.pi))
         for uPipe, lPipe in zip(self.upperPipes, self.lowerPipes):
             uPipe['x'] += self.pipeVelX
             lPipe['x'] += self.pipeVelX
             # pipe random Up and Down
-            pipeUD = random.randint(-5, 5)
             uPipe['y'] += pipeUD
             lPipe['y'] += pipeUD
+            pipeUD = -pipeUD
+        self._t += 1
+        if self._t > FPS:
+            self._t = 1
+            
 
         # add new pipe when first pipe is about to touch left of screen
         if 0 < self.upperPipes[0]['x'] < 5:
@@ -150,10 +157,9 @@ class GameState:
 def getRandomPipe():
     """returns a randomly generated pipe"""
     # y of gap between upper and lower pipe
-    gapYs = [20, 30, 40, 50, 60, 70, 80, 90, 100]
+    gapYs = [20, 30, 40, 50, 60, 70, 80, 90]
     index = random.randint(0, len(gapYs) - 1)
     gapY = gapYs[index]
-    # gapY = random.randint(-50, 200)
 
     gapY += int(BASEY * 0.2)
     pipeX = SCREENWIDTH + 10
