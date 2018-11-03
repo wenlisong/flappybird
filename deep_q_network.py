@@ -122,6 +122,7 @@ def trainNetwork(s, readout, h_fc1, sess):
     t = 0
     episode = 0
     learn_step_counter = 0
+    finish_step = 10000000
     while "flappy bird" != "angry bird":
         # choose an action epsilon greedily
         readout_t = readout.eval(feed_dict={s: [s_t]})[0]
@@ -220,6 +221,9 @@ def trainNetwork(s, readout, h_fc1, sess):
         print("TIMESTEP", t, "/ STATE", state, \
               "/ EPSILON", epsilon, "/ ACTION", action_index, "/ REWARD", r_t, \
               "/ Q_MAX %e" % np.max(readout_t))
+
+        if t > finish_step:
+            break
 
 
 def playGame():
