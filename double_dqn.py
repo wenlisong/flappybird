@@ -30,7 +30,7 @@ class DoubleDQN_Agent(DQN_Agent):
                 max_act = np.argmax(q_eval4next[i])
                 y_batch.append(r_t_batch[i] + self.gamma * q_next[i, max_act])
 
-        _, loss = self.sess.run([self._train_op, self.loss],
+        _, loss, summary_loss = self.sess.run([self._train_op, self.loss, self.merge_loss],
                                 feed_dict={self.s: s_t_batch, self.a: a_t_batch, self.y: y_batch})
 
         self.loss_per_step += loss
