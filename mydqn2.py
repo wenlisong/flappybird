@@ -17,7 +17,7 @@ class Deque(Memory):
 
 
 class DQN_Agent(Agent):
-    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0., replace_target_iter=1000,
+    def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=1000,
                  batch_size=32, observe_step=100000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
                  save_path='./saved_dqn_model/'):
 
