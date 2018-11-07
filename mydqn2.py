@@ -27,6 +27,7 @@ class DQN_Agent(Agent):
         self.score_per_episode = 0
         self.score = tf.placeholder(tf.float16, [], name='score')
         self.summary_score = tf.summary.scalar('score_per_episode', self.score)
+        self.loss_per_step = 0
 
         self.writer = tf.summary.FileWriter(save_path, self.sess.graph)
         self.merge_score = tf.summary.merge([self.summary_score])
