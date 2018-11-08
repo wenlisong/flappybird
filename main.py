@@ -35,7 +35,7 @@ def main(argv=None):
                 return 1
         elif opt in ("-n", "--network"):
             # train(arg)
-            if arg in ['dqn','doubledqn','mydqn', 'mydqn2', 'priodqn']:
+            if arg in ['dqn','doubledqn','mydqn', 'mydqn2', 'priodqn', 'pospriodqn']:
                 train(arg)
             else:
                 print("You could choose 'dqn', 'doubledqn' as network's parameter")

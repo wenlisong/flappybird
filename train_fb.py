@@ -47,6 +47,12 @@ def train(network):
         rl = Prio_DQN_Agent(learning_rate=1e-5,
                             save_path=score_graph_path,)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
+    elif network == 'pospriodqn':
+        from pos_prio_dqn import Pos_Prio_DQN_Agent
+        score_graph_path = './saved_pos_prio_dqn_model'
+        rl = Pos_Prio_DQN_Agent(learning_rate=1e-5,
+                                save_path=score_graph_path,)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     
     
 
