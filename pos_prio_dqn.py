@@ -98,7 +98,7 @@ class Prio_Memory(Memory):
 class Pos_Prio_DQN_Agent(Agent):
     def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=1000,
                  batch_size=32, observe_step=100000., explore_step=3000000., memory=Prio_Memory(), use_pre_weights=True,
-                 save_path='./saved_prio_dqn_model/'):
+                 save_path='./saved_pos_prio_dqn_model/'):
 
         super(Pos_Prio_DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
                                         batch_size, observe_step, explore_step, memory)
