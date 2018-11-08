@@ -6,6 +6,9 @@ from collections import deque
 import pdb
 
 
+IMAGE_WIDTH = 84
+IMAGE_HEIGHT = 84
+
 class Deque(Memory):
     def __init__(self, pool=deque(), memory_size=500000):
         super(Deque, self).__init__(pool, memory_size)
@@ -19,7 +22,7 @@ class Deque(Memory):
 class DQN_Agent(Agent):
     def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=1000,
                  batch_size=32, observe_step=100000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
-                 save_path='./saved_dqn_model/'):
+                 save_path='./saved_mydqn2_model/'):
 
         super(DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
                                         batch_size, observe_step, explore_step, memory)
@@ -36,6 +39,22 @@ class DQN_Agent(Agent):
         if use_pre_weights and checkpoint:
             self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
             print("Successfully loaded:", checkpoint.model_checkpoint_path)
+
+    def choose_action(self, observation):
+        x_pos = np.array([np.arange(0, IMAGE_WIDTH) for _ in range(IMAGE_HEIGHT)])/(IMAGE_WIDTH-1)
+        y_pos = x_pos.transpose()
+        pos_channel = np.stack((x_pos, y_pos), axis=2)
+        observation = np.concatenate((observation, pos_channel), axis=2)[np.newaxis, :]
+        action = np.zeros([self.action_cnt], dtype=float)
+        if np.random.uniform() > self.epsilon:
+            action_val = self.sess.run(self.q_eval, feed_dict={self.s: observation})
+            action_idx = np.argmax(action_val, axis=1)
+            # print('Q_Max_val {0}'.format(action_val))
+        else:
+            action_idx = np.random.randint(0, self.action_cnt)
+        action[action_idx] = 1.
+
+        return action
 
     def build_layers(self, var_scope, in_val, w_initializer, b_initializer):
         with tf.variable_scope(var_scope):
@@ -95,10 +114,13 @@ class DQN_Agent(Agent):
             self.sess.run(self.target_replace_op)
 
         minibatch = random.sample(self.memory.pool, self.batch_size)
-        s_t_batch = [row[0] for row in minibatch]
+        x_pos = np.array([np.arange(0, IMAGE_WIDTH) for _ in range(IMAGE_HEIGHT)])/(IMAGE_WIDTH-1)
+        y_pos = x_pos.transpose()
+        pos_channel = np.stack((x_pos, y_pos), axis=2)
+        s_t_batch = [np.concatenate((row[0], pos_channel), axis=2) for row in minibatch]
         a_t_batch = [row[1] for row in minibatch]
         r_t_batch = [row[2] for row in minibatch]
-        s_t1_batch = [row[3] for row in minibatch]
+        s_t1_batch = [np.concatenate((row[3], pos_channel), axis=2) for row in minibatch]
 
         y_batch = []
 
