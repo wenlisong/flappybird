@@ -20,20 +20,23 @@ def train(network):
         from dqn import DQN_Agent
         score_graph_path = './saved_dqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
-                        save_path=score_graph_path,)
+                        save_path=score_graph_path,
+                        use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'doubledqn':
         IMAGE_WIDTH = 80
         IMAGE_HEIGHT = 80
         from double_dqn import  DoubleDQN_Agent
         score_graph_path = './saved_double_dqn_model/'
-        rl = DoubleDQN_Agent(save_path=score_graph_path,)
+        rl = DoubleDQN_Agent(save_path=score_graph_path,
+                            use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'mydqn':
         from mydqn import DQN_Agent
         score_graph_path = './saved_mydqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
-                        save_path=score_graph_path,)
+                        save_path=score_graph_path,
+                        use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'mydqn2':
         from mydqn2 import DQN_Agent
