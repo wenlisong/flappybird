@@ -20,44 +20,49 @@ def train(network):
         from dqn import DQN_Agent
         score_graph_path = './saved_dqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
-                        save_path=score_graph_path,
-                        use_pre_weights=True)
+                       save_path=score_graph_path,
+                       use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
-    elif network == 'doubledqn':
+    elif network == 'double_dqn':
         IMAGE_WIDTH = 80
         IMAGE_HEIGHT = 80
-        from double_dqn import  DoubleDQN_Agent
+        from double_dqn import DoubleDQN_Agent
         score_graph_path = './saved_double_dqn_model/'
         rl = DoubleDQN_Agent(save_path=score_graph_path,
-                            use_pre_weights=True)
+                             use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'mydqn':
         from mydqn import DQN_Agent
         score_graph_path = './saved_mydqn_model/'
         rl = DQN_Agent(learning_rate=1e-5,
-                        save_path=score_graph_path,
-                        use_pre_weights=True)
+                       save_path=score_graph_path,
+                       use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
     elif network == 'mydqn2':
         from mydqn2 import DQN_Agent
         score_graph_path = './saved_mydqn2_model/'
         rl = DQN_Agent(learning_rate=1e-5,
-                        save_path=score_graph_path,)
+                       save_path=score_graph_path,)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
-    elif network == 'priodqn':
+    elif network == 'prio_dqn':
         from prio_dqn import Prio_DQN_Agent
         score_graph_path = './saved_prio_dqn_model/'
         rl = Prio_DQN_Agent(learning_rate=1e-5,
                             save_path=score_graph_path,)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
-    elif network == 'pospriodqn':
+    elif network == 'pos_prio_dqn':
         from pos_prio_dqn import Pos_Prio_DQN_Agent
         score_graph_path = './saved_pos_prio_dqn_model/'
         rl = Pos_Prio_DQN_Agent(learning_rate=1e-5,
                                 save_path=score_graph_path,)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
-    
-    
+    elif network == 'dueling_dqn':
+        from dueling_dqn import Dueling_DQN_Agent
+        score_graph_path = './saved_dueling_dqn_model/'
+        rl = Dueling_DQN_Agent(learning_rate=1e-5,
+                               save_path=score_graph_path,)
+        play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
+
 
 def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
     from game import wrapped_flappy_bird as fb
@@ -82,16 +87,17 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
 
         # rl take action and get next image and reward
         img, r_t, terminal = env.frame_step(a_t)
-        
+
         if r_t == 1:
             rl.score_per_episode += 1
         if terminal:
             episode += 1
             if episode % 10 == 0:
                 rl.score_per_episode = round(rl.score_per_episode/10, 3)
-                summary, summary_score = rl.sess.run([rl.summary_score, rl.score], feed_dict={rl.score: rl.score_per_episode})
+                summary, summary_score = rl.sess.run([rl.summary_score, rl.score], feed_dict={
+                                                     rl.score: rl.score_per_episode})
                 rl.writer.add_summary(summary, episode)
-                rl.score_per_episode =0
+                rl.score_per_episode = 0
 
         img = resize_gray_binary(img, IMAGE_WIDTH, IMAGE_HEIGHT)
         img = np.reshape(img, (IMAGE_WIDTH, IMAGE_HEIGHT, 1))
@@ -109,7 +115,8 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
         step += 1
 
         if step % 10000 == 0:
-            rl.saver.save(rl.sess, score_graph_path + 'FLAPYBIRD-rl', global_step=step)
+            rl.saver.save(rl.sess, score_graph_path +
+                          'FLAPYBIRD-', global_step=step)
             # print('Save params at episode {0}'.format(step))
 
         state = ""
@@ -119,7 +126,8 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
             state = "explore"
         else:
             state = "train"
-        print("STEP", step, "/ STATE", state, "/ EPSILON", rl.epsilon, "/ ACTION", np.argmax(a_t), "/ REWARD", r_t)
+        print("STEP", step, "/ STATE", state, "/ EPSILON",
+              rl.epsilon, "/ ACTION", np.argmax(a_t), "/ REWARD", r_t)
 
         if step > finish_step:
             break
@@ -127,6 +135,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
 
 def main():
     train()
+
 
 if __name__ == '__main__':
     main()

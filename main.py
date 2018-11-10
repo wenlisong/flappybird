@@ -12,7 +12,8 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], "hg:n:", ["help", "game=", "network="])
+            opts, args = getopt.getopt(
+                argv[1:], "hg:n:", ["help", "game=", "network="])
         except getopt.error as msg:
             raise Usage(msg)
     except Usage as err:
@@ -35,10 +36,10 @@ def main(argv=None):
                 return 1
         elif opt in ("-n", "--network"):
             # train(arg)
-            if arg in ['dqn','doubledqn','mydqn', 'mydqn2', 'priodqn', 'pospriodqn']:
+            if arg in ['dqn', 'double_dqn', 'mydqn', 'mydqn2', 'prio_dqn', 'pos_prio_dqn', 'dueling_dqn']:
                 train(arg)
             else:
-                print("You could choose 'dqn', 'doubledqn' as network's parameter")
+                print("You could choose 'dqn','double_dqn','mydqn', 'mydqn2', 'prio_dqn', 'pos_prio_dqn', 'dueling_dqn' as network's parameter")
                 return 1
             return 0
 
