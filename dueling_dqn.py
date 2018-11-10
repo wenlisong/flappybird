@@ -17,7 +17,7 @@ class Deque(Memory):
 
 class Dueling_DQN_Agent(Agent):
     def __init__(self, action_cnt=2, learning_rate=1e-6, reward_decay=0.99, e_greedy=0.1, replace_target_iter=1000,
-                 batch_size=32, observe_step=1000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
+                 batch_size=32, observe_step=100000., explore_step=3000000., memory=Deque(), use_pre_weights=False,
                  save_path='./saved_dueling_dqn_model/'):
 
         super(Dueling_DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
