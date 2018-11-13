@@ -4,8 +4,8 @@ import random
 
 
 class DoubleDQN_Agent(DQN_Agent):
-    def __init__(self, use_pre_weights=False, save_path='./saved_double_dqn_model/'):
-        super(DoubleDQN_Agent, self).__init__(use_pre_weights=use_pre_weights, save_path=save_path)
+    def __init__(self, e_greedy=0.1, use_pre_weights=False, save_path='./saved_double_dqn_model/'):
+        super(DoubleDQN_Agent, self).__init__(e_greedy=e_greedy, use_pre_weights=use_pre_weights, save_path=save_path)
 
     def learn(self):
         if self.learn_step_counter % self.replace_target_iter == 0:
