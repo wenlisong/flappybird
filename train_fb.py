@@ -116,7 +116,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
 
         if step % 10000 == 0:
             rl.saver.save(rl.sess, score_graph_path +
-                          'FLAPYBIRD-', global_step=step)
+                          'FLAPYBIRD', global_step=step)
             # print('Save params at episode {0}'.format(step))
 
         state = ""
