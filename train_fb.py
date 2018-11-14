@@ -68,7 +68,8 @@ def train(network):
         score_graph_path = './saved_dueling_dqn_model/'
         rl = Dueling_DQN_Agent(learning_rate=1e-5,
                                e_greedy=0.001,
-                               save_path=score_graph_path,)
+                               save_path=score_graph_path,
+                               use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
 
 
