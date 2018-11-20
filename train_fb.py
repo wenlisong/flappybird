@@ -66,8 +66,8 @@ def train(network):
     elif network == 'dueling_dqn':
         from dueling_dqn import Dueling_DQN_Agent
         score_graph_path = './saved_dueling_dqn_model/'
-        rl = Dueling_DQN_Agent(learning_rate=1e-5,
-                               e_greedy=0.001,
+        rl = Dueling_DQN_Agent(learning_rate=1e-6,
+                               e_greedy=0.,
                                save_path=score_graph_path,
                                use_pre_weights=True)
         play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step)
@@ -126,7 +126,6 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_step):
         if step % 10000 == 0:
             rl.saver.save(rl.sess, score_graph_path +
                           'FLAPYBIRD', global_step=step)
-            # print('Save params at episode {0}'.format(step))
 
         state = ""
         if step <= rl.observe_step:
