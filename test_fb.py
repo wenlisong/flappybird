@@ -11,7 +11,7 @@ def resize_gray_binary(image, IMAGE_WIDTH, IMAGE_HEIGHT):
 
     return image
 
-finish_episode = 3
+finish_episode = 1000
 
 def run(network):
     IMAGE_WIDTH = 84
