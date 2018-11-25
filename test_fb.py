@@ -111,7 +111,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_episode):
                                                     rl.score: rl.score_per_episode})
             rl.writer.add_summary(summary, episode)
             score_hist.append(rl.score_per_episode)
-            rl.score_per_episode = 0
+            rl.score_per_episode = 0.0
             if episode >= finish_episode:
                 break
 
@@ -121,6 +121,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_episode):
 
         # swap observation
         s_t = s_t1
+        
     max_score = max(score_hist)
     min_score = min(score_hist)
     aver_score = np.average(score_hist)

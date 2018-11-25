@@ -101,7 +101,7 @@ class Prio_DQN_Agent(Agent):
                                         batch_size, observe_step, explore_step, memory)
         # record average score per episode
         self.score_per_episode = 0
-        self.score = tf.placeholder(tf.float16, [], name='score')
+        self.score = tf.placeholder(tf.float32, [], name='score')
         self.summary_score = tf.summary.scalar('score_per_episode', self.score)
         self.loss_per_step = 0
 
