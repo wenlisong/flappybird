@@ -10,7 +10,7 @@ def resize_gray_binary(image, IMAGE_WIDTH, IMAGE_HEIGHT):
     return image
 
 
-def train(network):
+def run(network):
     IMAGE_WIDTH = 84
     IMAGE_HEIGHT = 84
     finish_step = 10000000

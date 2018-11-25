@@ -30,14 +30,15 @@ def main(argv=None):
             return 0
         elif opt in ("-g", "--game"):
             if arg == 'fb':
-                from train_fb import train
+                from train_fb import run
+            if arg == 'fbtest':
+                from test_fb import run
             else:
                 print("No this game, now we have flappy bird(fb)")
                 return 1
         elif opt in ("-n", "--network"):
-            # train(arg)
             if arg in ['dqn', 'double_dqn', 'mydqn', 'mydqn2', 'prio_dqn', 'pos_prio_dqn', 'dueling_dqn']:
-                train(arg)
+                run(arg)
             else:
                 print("You could choose 'dqn','double_dqn','mydqn', 'mydqn2', 'prio_dqn', 'pos_prio_dqn', 'dueling_dqn' as network's parameter")
                 return 1
