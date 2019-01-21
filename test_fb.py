@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def resize_gray_binary(image, IMAGE_WIDTH, IMAGE_HEIGHT):
     import cv2
     # resize
@@ -11,7 +12,9 @@ def resize_gray_binary(image, IMAGE_WIDTH, IMAGE_HEIGHT):
 
     return image
 
-finish_episode = 1000
+
+finish_episode = 1
+
 
 def run(network):
     IMAGE_WIDTH = 84
@@ -108,7 +111,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_episode):
             episode += 1
             rl.score_per_episode = round(rl.score_per_episode, 3)
             summary, summary_score = rl.sess.run([rl.summary_score, rl.score], feed_dict={
-                                                    rl.score: rl.score_per_episode})
+                rl.score: rl.score_per_episode})
             rl.writer.add_summary(summary, episode)
             score_hist.append(rl.score_per_episode)
             rl.score_per_episode = 0.0
@@ -121,7 +124,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_episode):
 
         # swap observation
         s_t = s_t1
-        
+
     max_score = max(score_hist)
     min_score = min(score_hist)
     aver_score = np.average(score_hist)
@@ -132,6 +135,7 @@ def play1(rl, score_graph_path, IMAGE_WIDTH, IMAGE_HEIGHT, finish_episode):
         f.write('min: %d\n' % min_score)
         f.write('average: %d\n' % aver_score)
         f.write('std deviation: %d\n' % std_deviation)
+
 
 def main():
     test()

@@ -5,7 +5,7 @@ from itertools import cycle
 import math
 import os
 
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+# os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 FPS = 30
 SCREENWIDTH = 288
@@ -148,8 +148,8 @@ class GameState:
                     (self.playerx, self.playery))
 
         image_data = pygame.surfarray.array3d(SCREEN).transpose((1, 0, 2))
-        # pygame.display.update()
-        # FPSCLOCK.tick(FPS)
+        pygame.display.update()
+        FPSCLOCK.tick(FPS)
         # print self.upperPipes[0]['y'] + PIPE_HEIGHT - int(BASEY * 0.2)
         return image_data, reward, terminal
 

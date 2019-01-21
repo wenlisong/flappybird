@@ -49,7 +49,8 @@ class Sum_Tree(object):
     @property
     def total_p(self):
         return self.tree[0]  # the root
-    
+
+
 class Prio_Memory(Memory):
     epsilon = 0.01  # small amount to avoid zero priority
     alpha = 0.6  # [0~1] convert the importance of TD error to priority
@@ -70,18 +71,22 @@ class Prio_Memory(Memory):
 
     def sample(self, batch_size):
         # (32,) (32,5) (32,1)
-        b_idx, b_memory, ISWeights = np.empty((batch_size,), dtype=np.int32), np.empty((batch_size, len(self.pool.data[0])), dtype=object), np.empty((batch_size, 1))
+        b_idx, b_memory, ISWeights = np.empty((batch_size,), dtype=np.int32), np.empty(
+            (batch_size, len(self.pool.data[0])), dtype=object), np.empty((batch_size, 1))
         pri_seg = self.pool.total_p / batch_size       # priority segment
-        self.beta = np.min([1., self.beta + self.beta_increment_per_sampling])  # max = 1
+        self.beta = np.min(
+            [1., self.beta + self.beta_increment_per_sampling])  # max = 1
 
-        min_prob = np.min(self.pool.tree[-self.pool.capacity:]) / self.pool.total_p     # for later calculate ISweight
+        # for later calculate ISweight
+        min_prob = np.min(
+            self.pool.tree[-self.pool.capacity:]) / self.pool.total_p
         for i in range(batch_size):
             a, b = pri_seg * i, pri_seg * (i + 1)
             v = np.random.uniform(a, b)
             idx, p, data = self.pool.get_leaf(v)
             prob = p / self.pool.total_p
             ISWeights[i, 0] = np.power(prob/min_prob, -self.beta)
-            b_idx[i], b_memory[i,:] = idx, data
+            b_idx[i], b_memory[i, :] = idx, data
         return b_idx, b_memory, ISWeights
 
     def batch_update(self, tree_idx, abs_errors):
@@ -98,7 +103,7 @@ class Prio_DQN_Agent(Agent):
                  save_path='./saved_prio_dqn_model/'):
 
         super(Prio_DQN_Agent, self).__init__(action_cnt, learning_rate, reward_decay, e_greedy, replace_target_iter,
-                                        batch_size, observe_step, explore_step, memory)
+                                             batch_size, observe_step, explore_step, memory)
         # record average score per episode
         self.score_per_episode = 0
         self.score = tf.placeholder(tf.float32, [], name='score')
@@ -142,25 +147,31 @@ class Prio_DQN_Agent(Agent):
         self.s = tf.placeholder(tf.float32, [None, 84, 84, 4], 's')
         self.a = tf.placeholder(tf.float32, [None, self.action_cnt], 'a')
         self.s_ = tf.placeholder(tf.float32, [None, 84, 84, 4], 's_')
-        self.ISWeights = tf.placeholder(tf.float32, [None, 1], name='IS_weights')
+        self.ISWeights = tf.placeholder(
+            tf.float32, [None, 1], name='IS_weights')  # importance-sampling weight
 
         w_initializer = tf.truncated_normal_initializer(0., 0.01)
         b_initializer = tf.constant_initializer(0.01)
 
-        self.q_eval = self.build_layers('eval_net', self.s, w_initializer, b_initializer)
-        self.q_next = self.build_layers('target_net', self.s_, w_initializer, b_initializer)
+        self.q_eval = self.build_layers(
+            'eval_net', self.s, w_initializer, b_initializer)
+        self.q_next = self.build_layers(
+            'target_net', self.s_, w_initializer, b_initializer)
 
         with tf.variable_scope('y'):
             self.y = tf.placeholder(tf.float32, [None, ])
         with tf.variable_scope('q_eval_a'):
-            self.q_eval_a = tf.reduce_sum(tf.multiply(self.q_eval, self.a), reduction_indices=1)
+            self.q_eval_a = tf.reduce_sum(tf.multiply(
+                self.q_eval, self.a), reduction_indices=1)
         with tf.name_scope('loss'):
             self.abs_errors = tf.abs(self.y - self.q_eval_a)
-            self.loss = tf.reduce_mean(self.ISWeights * tf.squared_difference(self.y, self.q_eval_a, name='TemporalDiff_error'))
+            self.loss = tf.reduce_mean(
+                self.ISWeights * tf.squared_difference(self.y, self.q_eval_a, name='TemporalDiff_error'))
         summary_loss = tf.summary.scalar('loss', self.loss)
         self.merge_loss = tf.summary.merge([summary_loss])
         with tf.name_scope('train'):
-            self._train_op = tf.train.AdamOptimizer(self.lr).minimize(self.loss)
+            self._train_op = tf.train.AdamOptimizer(
+                self.lr).minimize(self.loss)
 
     def learn(self):
         if self.learn_step_counter % self.replace_target_iter == 0:
@@ -185,20 +196,19 @@ class Prio_DQN_Agent(Agent):
                 y_batch.append(r_t_batch[i] + self.gamma * q_next[i, max_act])
 
         _, loss, summary_loss, abs_errors = self.sess.run([self._train_op, self.loss, self.merge_loss, self.abs_errors],
-                                                            feed_dict={
-                                                                self.s: s_t_batch,
-                                                                self.a: a_t_batch,
-                                                                self.y: y_batch,
-                                                                self.ISWeights: ISWeights
-                                                            })
-        
+                                                          feed_dict={
+            self.s: s_t_batch,
+            self.a: a_t_batch,
+            self.y: y_batch,
+            self.ISWeights: ISWeights
+        })
+
         self.memory.batch_update(tree_idx, abs_errors)
-        
+
         self.loss_per_step += loss
         if self.learn_step_counter % 100 == 0:
             self.loss_per_step = round(self.loss_per_step/100, 3)
             self.writer.add_summary(summary_loss, self.learn_step_counter)
             self.loss_per_step = 0
-        
+
         self.learn_step_counter += 1
- 
